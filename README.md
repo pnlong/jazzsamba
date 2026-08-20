@@ -1,14 +1,28 @@
-# jazz-samba
+# jazzsamba
 
-Python helper for the **JazzSAMBA** jazz-standards multitrack dataset.
+Python API for the **JazzSAMBA** multitrack jazz-standards dataset.
 
-This is the **only public consumer API** for the release. Install the package, point it at a JazzSAMBA directory (after unzipping the Zenodo archives into one folder), and load songs / takes / stems.
+Install the package, point it at a local `JazzSAMBA/` directory (after unzipping the Zenodo archives into one folder), and load songs, takes, and stems.
+
+## Related repos
+
+| | |
+|--|--|
+| **Dataset download** | Zenodo (DOI forthcoming) |
+| **Project page** | [`pnlong/jazzsamba-demo`](https://github.com/pnlong/jazzsamba-demo) — [listen / explore](https://pnlong.github.io/jazzsamba-demo/) |
+| **Processing / release pipeline** | [`pnlong/jazz-standard-dataset`](https://github.com/pnlong/jazz-standard-dataset) (authoring only; not required to use this package) |
 
 ## Install
 
 ```bash
-pip install -e path/to/jazz-samba
+pip install -e .
 # later: pip install jazz-samba
+```
+
+From the processing monorepo (submodule):
+
+```bash
+pip install -e packages/jazz-samba
 ```
 
 ## Quick start
@@ -35,11 +49,11 @@ for song in ds.songs(synchronous=False, genre="swing"):
     extras = song.recording.extras()  # async only; not a Take
 ```
 
-`reference.url` / `youtube_id` come from `songs.csv` (pointers only; no audio in JazzSAMBA).
+`reference.url` / `youtube_id` come from `songs.csv` (pointers only; commercial/YouTube audio is not in JazzSAMBA).
 
 ## Object model
 
-The entity diagram and the **song-level vs take-level** split are in the JazzSAMBA dataset README (Zenodo / `JazzSAMBA/README.md`; source [`preprocessing/release/JazzSAMBA_README.md`](../../preprocessing/release/JazzSAMBA_README.md)).
+See [docs/ER.md](docs/ER.md). Canonical layout and song- vs take-level fields are also in the JazzSAMBA dataset `README.md` (shipped on Zenodo).
 
 ```
 JazzSamba(root)
@@ -75,8 +89,6 @@ JazzSAMBA/
 ```python
 ids = ds.split_ids("async_test")  # reads async/splits/test.txt
 ```
-
-During development you may pass the working `DATA_DIR` (legacy `songs/<id>/{async,sync}/` plus `splits/async_test.txt`).
 
 ## License
 
