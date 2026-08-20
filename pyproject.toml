@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jazz-samba"
+version = "0.1.0"
+description = "Python helper for the JazzSAMBA jazz-standards multitrack dataset"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+  { name = "Phillip Long" },
+]
+keywords = ["jazz", "music", "dataset", "multitrack", "MIR"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Sound/Audio",
+]
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "soundfile>=0.12",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/pnlong/jazzsamba"
+Documentation = "https://github.com/pnlong/jazzsamba#readme"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jazz_samba*"]
