@@ -9,7 +9,6 @@ import pytest
 pytest.importorskip("jazz_samba")
 
 from jazz_samba import JazzSamba
-from jazz_samba.constants import TAKE_LEVEL_SHEET_COLUMNS
 
 
 @pytest.fixture(scope="module")
@@ -47,12 +46,13 @@ def test_take_level_structure_on_take(ds):
     song = ds.song(1)
     better = song.recording.take("better")
     worse = song.recording.take("worse")
-    # Sheet-backed fallbacks until take-local files are always present
+    # Public release derives order/sequence from soloists.csv and bars.csv.
     assert better.solo_order == worse.solo_order == song.solo_order
     assert better.measure_sequence == worse.measure_sequence == song.measure_sequence
-    assert better.solo_order  # song 1 has a solo order
-    assert "solo_order" in TAKE_LEVEL_SHEET_COLUMNS
-    assert "measure_sequence" in TAKE_LEVEL_SHEET_COLUMNS
+    assert better.solo_order
+    soloists = better.annotation("soloists")
+    assert soloists is not None
+    assert "instrument" in soloists.load().columns
 
 
 def test_song_level_meta(ds):

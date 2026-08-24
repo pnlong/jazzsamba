@@ -67,8 +67,8 @@ Prefer:
 
 ```python
 take = song.recording.take("better")
-take.measure_sequence
-take.solo_order
+take.measure_sequence   # derived from annotations/bars.csv
+take.solo_order         # derived from annotations/soloists.csv (instrument column)
 take.annotations()
 ```
 

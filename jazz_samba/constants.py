@@ -70,17 +70,9 @@ ANNOTATION_NAMES = (
     "soloists",
     "section_musicians",
     "notes",
-    "measure_sequence",
-    "solo_order",
 )
 
 ANNOTATIONS_DIRNAME = "annotations"
-
-# Take-level structure (CSV in the public tree; JSON may exist in a working DATA_DIR).
-MEASURE_SEQUENCE_FILENAME = "measure_sequence.json"
-MEASURE_SEQUENCE_CSV = "measure_sequence.csv"
-SOLO_ORDER_FILENAME = "solo_order.json"
-SOLO_ORDER_CSV = "solo_order.csv"
 
 LEAD_SHEET_STEM = "lead_sheet"
 SONGS_CSV = "songs.csv"
@@ -118,12 +110,4 @@ SONG_LEVEL_COLUMNS = (
     "reference.url",
     "youtube_id",
     "comment",
-)
-
-# Authored on the songs sheet today, but semantically take-level (duplicated
-# async better→worse; may diverge for sync takes). Prefer Take.* accessors.
-TAKE_LEVEL_SHEET_COLUMNS = (
-    "solo_order",
-    "solo_order.musician_ids",
-    "measure_sequence",
 )

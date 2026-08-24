@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -14,14 +13,10 @@ from jazz_samba.constants import (
     ANNOTATIONS_DIRNAME,
     ASYNC_GT_MIDI_INSTRUMENTS,
     ASYNC_WAV_TRACKS,
-    MEASURE_SEQUENCE_CSV,
-    MEASURE_SEQUENCE_FILENAME,
     MIXTURE_DEBLEEDED_DERIVED_FILENAME,
     MIXTURE_DEBLEEDED_FILENAME,
     MIXTURE_FILENAME,
     MIXTURE_SYNTHESIZED_FILENAME,
-    SOLO_ORDER_CSV,
-    SOLO_ORDER_FILENAME,
     SYNC_GT_MIDI_INSTRUMENTS,
     SYNC_WAV_TRACKS,
     TRACK_TO_INSTRUMENT,
@@ -33,23 +28,17 @@ from jazz_samba.stem import (
     resolve_midi_for_instrument,
 )
 
+BARS_CSV = "bars.csv"
+SOLOISTS_CSV = "soloists.csv"
 
-def _parse_solo_order(raw: Any) -> list[str]:
-    if raw is None:
-        return []
-    if isinstance(raw, float) and raw != raw:  # NaN
-        return []
-    if isinstance(raw, list):
-        return [str(x).strip() for x in raw if str(x).strip()]
-    text = str(raw).strip()
-    if not text or text.upper() == "NA":
-        return []
-    if "," in text:
-        return [part.strip() for part in text.split(",") if part.strip()]
-    if "-" in text and text.replace("-", "").isdigit():
-        # musician-id form "3-4-2" — keep as tokens for callers that resolve IDs
-        return [part.strip() for part in text.split("-") if part.strip()]
-    return [text]
+
+def _instrument_from_solo_section(section: str) -> str | None:
+    top = str(section).split("/")[0]
+    prefix = "solos-"
+    if top.startswith(prefix):
+        inst = top[len(prefix) :].strip()
+        return inst or None
+    return None
 
 
 @dataclass
@@ -58,19 +47,18 @@ class Take:
 
     **Take-level attributes** (see the JazzSAMBA README data model):
 
-    - ``measure_sequence`` — measures played in this take
-    - ``solo_order`` — soloist sequence for this take
+    - ``measure_sequence`` — measures played in this take (from ``bars.csv``)
+    - ``solo_order`` — soloist sequence for this take (from ``soloists.csv``)
     - ``annotations`` / ``annotation`` — timed CSV tables
     - stems, mixture, MIDI
 
-    Async: humans annotate ``better``; the same measure sequence, solo order,
-    and annotations are **duplicated** onto ``worse``. Sync: takes may diverge.
+    Async: humans annotate ``better``; the same bar grid and annotations are
+    **duplicated** onto ``worse``. Sync: takes may diverge.
     """
 
     quality: str
     folder: Path
     mode: str  # "async" | "sync"
-    # Song-sheet row used as fallback until take-local files are always shipped.
     song_row: dict[str, Any] = field(default_factory=dict)
     _stems_cache: dict[str, Stem] | None = field(default=None, repr=False, compare=False)
 
@@ -90,84 +78,47 @@ class Take:
         return nested if nested.is_dir() else self.folder
 
     @property
-    def measure_sequence_path(self) -> Path:
-        csv_path = self.annotations_dir / MEASURE_SEQUENCE_CSV
-        if csv_path.is_file():
-            return csv_path
-        return self.folder / MEASURE_SEQUENCE_FILENAME
-
-    @property
-    def solo_order_path(self) -> Path:
-        csv_path = self.annotations_dir / SOLO_ORDER_CSV
-        if csv_path.is_file():
-            return csv_path
-        return self.folder / SOLO_ORDER_FILENAME
-
-    def measure_sequence_payload(self) -> dict[str, Any] | None:
-        """Load take-local measure sequence JSON if present (working tree)."""
-        path = self.folder / MEASURE_SEQUENCE_FILENAME
-        if not path.is_file():
-            return None
-        return json.loads(path.read_text())
-
-    @property
     def measure_sequence(self) -> str | None:
-        """Measure-sequence string for this take.
-
-        Prefers ``annotations/measure_sequence.csv``, then take-local JSON,
-        then the songs-sheet ``measure_sequence`` column (working DATA_DIR).
-        """
-        csv_path = self.annotations_dir / MEASURE_SEQUENCE_CSV
-        if csv_path.is_file():
-            df = pd.read_csv(csv_path)
-            if "measure" in df.columns and not df.empty:
-                return "_".join(str(int(m)) for m in df["measure"])
-        payload = self.measure_sequence_payload()
-        if payload is not None:
-            base = payload.get("base_measure_sequence")
-            if base:
-                return str(base)
-            measures = payload.get("measures")
-            if measures:
-                return "_".join(str(m) for m in measures)
-        raw = self.song_row.get("measure_sequence")
-        if raw is None or (isinstance(raw, float) and raw != raw):
+        """Played measure numbers joined by ``_`` (from ``annotations/bars.csv``)."""
+        bars_path = self.annotations_dir / BARS_CSV
+        if not bars_path.is_file():
             return None
-        text = str(raw).strip()
-        return text or None
+        df = pd.read_csv(bars_path)
+        if "measure" not in df.columns or df.empty:
+            return None
+        if "bar" in df.columns:
+            df = df.sort_values("bar")
+        return "_".join(str(int(m)) for m in df["measure"])
 
     @property
     def solo_order(self) -> list[str]:
-        """Solo order for this take (instrument names or musician-id tokens).
-
-        Prefers ``annotations/solo_order.csv``; then take-local JSON; then sheet.
-        """
-        csv_path = self.annotations_dir / SOLO_ORDER_CSV
-        if csv_path.is_file():
-            df = pd.read_csv(csv_path)
-            if "instrument" in df.columns:
-                if "position" in df.columns:
-                    df = df.sort_values("position")
-                return [str(x).strip() for x in df["instrument"].tolist() if str(x).strip()]
-        path = self.folder / SOLO_ORDER_FILENAME
-        if path.is_file():
-            data = json.loads(path.read_text())
-            if isinstance(data, dict):
-                if "instruments" in data:
-                    return _parse_solo_order(data["instruments"])
-                if "solo_order" in data:
-                    return _parse_solo_order(data["solo_order"])
-                if "musician_ids" in data:
-                    return _parse_solo_order(data["musician_ids"])
-            return _parse_solo_order(data)
-        for key in ("solo_order", "solo_order.musician_ids"):
-            parsed = _parse_solo_order(self.song_row.get(key))
-            if parsed:
-                return parsed
+        """Solo instrument order for this take (from ``annotations/soloists.csv``)."""
+        soloists_path = self.annotations_dir / SOLOISTS_CSV
+        if not soloists_path.is_file():
+            return []
+        df = pd.read_csv(soloists_path)
+        if df.empty:
+            return []
+        if "solo_index" in df.columns:
+            df = df.sort_values("solo_index")
+        if "instrument" in df.columns:
+            out = [
+                str(x).strip()
+                for x in df["instrument"].tolist()
+                if str(x).strip() and str(x).strip().lower() != "nan"
+            ]
+            if out:
+                return out
+        if "section" in df.columns:
+            return [
+                inst
+                for inst in (_instrument_from_solo_section(sec) for sec in df["section"])
+                if inst
+            ]
         return []
 
     def annotations(self) -> dict[str, AnnotationTable]:
-        """Timed annotation CSVs for this take (``final_*.csv`` preferred)."""
+        """Timed annotation CSVs for this take."""
         return discover_annotation_tables(self.folder)
 
     def annotation(self, name: str) -> AnnotationTable | None:
@@ -188,7 +139,6 @@ class Take:
         path = self.folder / MIXTURE_FILENAME
         if path.is_file():
             return path
-        # Fall back to synthesized mixture during incomplete pipeline runs.
         synth = self.folder / MIXTURE_SYNTHESIZED_FILENAME
         return synth if synth.is_file() else None
 

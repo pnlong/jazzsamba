@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from jazz_samba.constants import SONG_LEVEL_COLUMNS, TAKE_LEVEL_SHEET_COLUMNS
+from jazz_samba.constants import SONG_LEVEL_COLUMNS
 from jazz_samba.lead_sheet import LeadSheet, ReferenceAudio
 from jazz_samba.recording import AsyncRecording, Recording, SyncRecording
 from jazz_samba.stem import as_plain_dict
@@ -154,15 +154,10 @@ class Song:
 
     @property
     def solo_order(self) -> list[str]:
-        """Convenience: ``better`` take solo order (take-level; see ER.md)."""
+        """Convenience: ``better`` take solo order (from ``soloists.csv``)."""
         return self.better_take().solo_order
 
     @property
     def measure_sequence(self) -> str | None:
-        """Convenience: ``better`` take measure sequence (take-level; see ER.md)."""
+        """Convenience: ``better`` take measure sequence (from ``bars.csv``)."""
         return self.better_take().measure_sequence
-
-    @staticmethod
-    def take_level_sheet_columns() -> tuple[str, ...]:
-        """Songs-sheet columns that are semantically take-level."""
-        return TAKE_LEVEL_SHEET_COLUMNS
