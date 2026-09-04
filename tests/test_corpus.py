@@ -1,4 +1,4 @@
-"""Minimal tests for jazz_samba (run with JAZZSAMBA_DIR or DATA_DIR set)."""
+"""Minimal tests for jazzsamba (run with JAZZSAMBA_DIR or DATA_DIR set)."""
 
 from __future__ import annotations
 
@@ -6,9 +6,9 @@ import os
 
 import pytest
 
-pytest.importorskip("jazz_samba")
+pytest.importorskip("jazzsamba")
 
-from jazz_samba import JazzSamba
+from jazzsamba import JazzSamba
 
 
 @pytest.fixture(scope="module")

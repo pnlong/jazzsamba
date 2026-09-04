@@ -8,14 +8,14 @@ from typing import Iterator
 
 import pandas as pd
 
-from jazz_samba.constants import (
+from jazzsamba.constants import (
     MUSICIANS_CSV,
     SONGS_CSV,
     SONGS_DIRNAME,
     SPLIT_NAMES,
     SPLITS_DIRNAME,
 )
-from jazz_samba.song import Song, _as_bool
+from jazzsamba.song import Song, _as_bool
 
 
 def read_split_file(path: Path) -> list[int]:

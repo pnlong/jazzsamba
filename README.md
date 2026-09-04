@@ -16,19 +16,20 @@ Install the package, point it at a local `JazzSAMBA/` directory (after unzipping
 
 ```bash
 pip install -e .
-# later: pip install jazz-samba
+# later: pip install jazzsamba
+# needs setuptools>=68 (or the included setup.py for older pip)
 ```
 
 From the processing monorepo (submodule):
 
 ```bash
-pip install -e packages/jazz-samba
+pip install -e packages/jazzsamba
 ```
 
 ## Quick start
 
 ```python
-from jazz_samba import JazzSamba
+from jazzsamba import JazzSamba
 
 ds = JazzSamba("/path/to/JazzSAMBA")
 # or JazzSamba() if JAZZSAMBA_DIR / JAZZ_SAMBA_ROOT is set (or a nearby .env)

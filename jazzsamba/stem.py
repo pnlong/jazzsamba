@@ -8,8 +8,8 @@ from typing import Any
 
 import pandas as pd
 
-from jazz_samba.audio import load_audio
-from jazz_samba.constants import (
+from jazzsamba.audio import load_audio
+from jazzsamba.constants import (
     ANNOTATION_NAMES,
     ANNOTATIONS_DIRNAME,
     TRACK_TO_INSTRUMENT,

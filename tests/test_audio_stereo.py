@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 
-from jazz_samba.audio import stereo_map_tracks, track_name_from_stem_path
+from jazzsamba.audio import stereo_map_tracks, track_name_from_stem_path
 
 
 def test_track_name_strips_debleeded_suffix():

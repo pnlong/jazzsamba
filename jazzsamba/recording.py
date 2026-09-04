@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from jazz_samba.constants import TAKE_QUALITIES
-from jazz_samba.take import Take
+from jazzsamba.constants import TAKE_QUALITIES
+from jazzsamba.take import Take
 
 
 class Recording:

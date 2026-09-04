@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from jazz_samba.corpus import is_release_layout, split_file_path
-from jazz_samba.constants import SPLIT_NAMES
+from jazzsamba.corpus import is_release_layout, split_file_path
+from jazzsamba.constants import SPLIT_NAMES
 
 
 def test_split_file_path_release_and_working(tmp_path: Path):

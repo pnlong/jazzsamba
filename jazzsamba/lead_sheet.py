@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from jazz_samba.constants import LEAD_SHEET_STEM
+from jazzsamba.constants import LEAD_SHEET_STEM
 
 
 @dataclass(frozen=True)

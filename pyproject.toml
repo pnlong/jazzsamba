@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "jazz-samba"
+name = "jazzsamba"
 version = "0.1.0"
 description = "Python helper for the JazzSAMBA jazz-standards multitrack dataset"
 readme = "README.md"
@@ -33,6 +33,5 @@ dev = ["pytest>=7.0"]
 Homepage = "https://github.com/pnlong/jazzsamba"
 Documentation = "https://github.com/pnlong/jazzsamba#readme"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["jazz_samba*"]
+[tool.setuptools]
+packages = ["jazzsamba"]

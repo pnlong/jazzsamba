@@ -8,11 +8,11 @@ from typing import Any
 
 import pandas as pd
 
-from jazz_samba.constants import SONG_LEVEL_COLUMNS
-from jazz_samba.lead_sheet import LeadSheet, ReferenceAudio
-from jazz_samba.recording import AsyncRecording, Recording, SyncRecording
-from jazz_samba.stem import as_plain_dict
-from jazz_samba.take import Take
+from jazzsamba.constants import SONG_LEVEL_COLUMNS
+from jazzsamba.lead_sheet import LeadSheet, ReferenceAudio
+from jazzsamba.recording import AsyncRecording, Recording, SyncRecording
+from jazzsamba.stem import as_plain_dict
+from jazzsamba.take import Take
 
 
 def _as_bool(value: Any) -> bool:
@@ -29,7 +29,7 @@ class Song:
 
     Song-level fields (title, genre, key, lead sheet, references, …) live here.
     **Take-level** fields — ``measure_sequence``, ``solo_order``, timed
-    annotations — belong on :class:`~jazz_samba.take.Take` (see the JazzSAMBA README data model).
+    annotations — belong on :class:`~jazzsamba.take.Take` (see the JazzSAMBA README data model).
 
     Convenience: :meth:`better_take` and the ``solo_order`` /
     ``measure_sequence`` properties delegate to the ``better`` take so callers
