@@ -43,7 +43,7 @@ def _instrument_from_solo_section(section: str) -> str | None:
 
 @dataclass
 class Take:
-    """One ``better`` or ``worse`` quality folder under async/ or sync/.
+    """One ``preferred`` or ``alternate`` quality folder under async/ or sync/.
 
     **Take-level attributes** (see the JazzSAMBA README data model):
 
@@ -52,8 +52,8 @@ class Take:
     - ``annotations`` / ``annotation`` — timed CSV tables
     - stems, mixture, MIDI
 
-    Async: humans annotate ``better``; the same bar grid and annotations are
-    **duplicated** onto ``worse``. Sync: takes may diverge.
+    Async: humans annotate ``preferred``; the same bar grid and annotations are
+    **duplicated** onto ``alternate``. Sync: takes may diverge.
     """
 
     quality: str

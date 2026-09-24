@@ -32,7 +32,7 @@ def test_corpus_counts(ds):
 def test_async_take_stems(ds):
     song = ds.song(0)
     assert not song.synchronous
-    take = song.recording.take("better")
+    take = song.recording.take("preferred")
     assert take.mixture_path() is not None
     assert len(take.stems()) >= 1
 
@@ -44,13 +44,13 @@ def test_lead_sheet_paths(ds):
 
 def test_take_level_structure_on_take(ds):
     song = ds.song(1)
-    better = song.recording.take("better")
-    worse = song.recording.take("worse")
+    preferred = song.recording.take("preferred")
+    alternate = song.recording.take("alternate")
     # Public release derives order/sequence from soloists.csv and bars.csv.
-    assert better.solo_order == worse.solo_order == song.solo_order
-    assert better.measure_sequence == worse.measure_sequence == song.measure_sequence
-    assert better.solo_order
-    soloists = better.annotation("soloists")
+    assert preferred.solo_order == alternate.solo_order == song.solo_order
+    assert preferred.measure_sequence == alternate.measure_sequence == song.measure_sequence
+    assert preferred.solo_order
+    soloists = preferred.annotation("soloists")
     assert soloists is not None
     assert "instrument" in soloists.load().columns
 

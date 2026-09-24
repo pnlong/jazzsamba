@@ -2,7 +2,37 @@
 
 from __future__ import annotations
 
-TAKE_QUALITIES = ("better", "worse")
+TAKE_QUALITIES = ("preferred", "alternate")
+
+# Authoring / working trees still use better/worse folder names.
+_LEGACY_TAKE_QUALITY = {
+    "preferred": "better",
+    "alternate": "worse",
+}
+_QUALITY_ALIASES = {
+    "preferred": "preferred",
+    "alternate": "alternate",
+    "better": "preferred",
+    "worse": "alternate",
+}
+
+
+def canonicalize_take_quality(quality: str) -> str:
+    """Map a take-quality name to the public canonical form."""
+    key = str(quality).strip().lower()
+    if key not in _QUALITY_ALIASES:
+        raise ValueError(
+            f"quality must be one of {TAKE_QUALITIES} "
+            f"(aliases: better→preferred, worse→alternate), got {quality!r}"
+        )
+    return _QUALITY_ALIASES[key]
+
+
+def take_quality_folder_names(quality: str) -> tuple[str, ...]:
+    """Candidate on-disk folder names for a quality (public first, then legacy)."""
+    canonical = canonicalize_take_quality(quality)
+    legacy = _LEGACY_TAKE_QUALITY[canonical]
+    return (canonical, legacy) if canonical != legacy else (canonical,)
 
 INSTRUMENTS = (
     "drums",

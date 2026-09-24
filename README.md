@@ -34,7 +34,7 @@ from jazzsamba import JazzSamba
 ds = JazzSamba("/path/to/JazzSAMBA")
 # or JazzSamba() if JAZZSAMBA_DIR / JAZZ_SAMBA_ROOT is set (or a nearby .env)
 song = ds.song(0)
-take = song.recording.take("better")
+take = song.recording.take("preferred")
 mixture = take.mixture_path()
 bass = take.stem("bass")
 print(bass.audio_path, bass.midi_path, bass.midi_is_gt, bass.is_derived)
@@ -46,7 +46,7 @@ Iterate and filter (rows whose protocol song directory is missing are skipped):
 
 ```python
 for song in ds.songs(synchronous=False, genre="swing"):
-    take = song.recording.take("better")
+    take = song.recording.take("preferred")
     extras = song.recording.extras()  # async only; not a Take
 ```
 
@@ -60,14 +60,14 @@ See [docs/ER.md](docs/ER.md). Canonical layout and song- vs take-level fields ar
 JazzSamba(root)
   └── Song
         └── AsyncRecording | SyncRecording
-              └── Take (better | worse)
+              └── Take (preferred | alternate)
               └── extras/   # async only, not a Take
 ```
 
 Prefer:
 
 ```python
-take = song.recording.take("better")
+take = song.recording.take("preferred")
 take.measure_sequence   # derived from annotations/bars.csv
 take.solo_order         # derived from annotations/soloists.csv (instrument column)
 take.annotations()
@@ -81,10 +81,10 @@ JazzSAMBA/
   musicians.csv
   async/
     splits/{train,val,test}.txt
-    songs/<NN-title>/{better,worse,extras}/
+    songs/<NN-title>/{preferred,alternate,extras}/
   sync/
     splits/{train,val,test}.txt
-    songs/<NN-title>/{better,worse}/
+    songs/<NN-title>/{preferred,alternate}/
 ```
 
 ```python

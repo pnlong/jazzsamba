@@ -31,8 +31,8 @@ class Song:
     **Take-level** fields — ``measure_sequence``, ``solo_order``, timed
     annotations — belong on :class:`~jazzsamba.take.Take` (see the JazzSAMBA README data model).
 
-    Convenience: :meth:`better_take` and the ``solo_order`` /
-    ``measure_sequence`` properties delegate to the ``better`` take so callers
+    Convenience: :meth:`preferred_take` and the ``solo_order`` /
+    ``measure_sequence`` properties delegate to the ``preferred`` take so callers
     have a short path, but new code should prefer ``recording.take(...)``.
     """
 
@@ -144,20 +144,20 @@ class Song:
                 self._recording = AsyncRecording(self.song_dir, song_row=self.row)
         return self._recording
 
-    def better_take(self) -> Take:
-        return self.recording.take("better")
+    def preferred_take(self) -> Take:
+        return self.recording.take("preferred")
 
-    def worse_take(self) -> Take:
-        return self.recording.take("worse")
+    def alternate_take(self) -> Take:
+        return self.recording.take("alternate")
 
-    # --- take-level convenience (delegates to better) -------------------------
+    # --- take-level convenience (delegates to preferred) ----------------------
 
     @property
     def solo_order(self) -> list[str]:
-        """Convenience: ``better`` take solo order (from ``soloists.csv``)."""
-        return self.better_take().solo_order
+        """Convenience: ``preferred`` take solo order (from ``soloists.csv``)."""
+        return self.preferred_take().solo_order
 
     @property
     def measure_sequence(self) -> str | None:
-        """Convenience: ``better`` take measure sequence (from ``bars.csv``)."""
-        return self.better_take().measure_sequence
+        """Convenience: ``preferred`` take measure sequence (from ``bars.csv``)."""
+        return self.preferred_take().measure_sequence
