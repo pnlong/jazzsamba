@@ -17,8 +17,13 @@ Install the package, point it at a local `JazzSAMBA/` directory (after unzipping
 ## Install
 
 ```bash
+pip install jazzsamba
+```
+
+From a checkout of this repo:
+
+```bash
 pip install -e .
-# later: pip install jazzsamba
 # needs setuptools>=68 (or the included setup.py for older pip)
 ```
 
