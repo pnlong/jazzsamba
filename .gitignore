@@ -11,6 +11,7 @@ build/
 # Virtualenvs / tools
 .venv/
 venv/
+uv.lock
 .env
 .python-version
 .pytest_cache/
