@@ -1,5 +1,6 @@
 # jazzsamba
 
+[![arXiv](https://img.shields.io/badge/arXiv-2609.34931-b31b1b.svg)](https://arxiv.org/abs/2609.34931)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22943963.svg)](https://doi.org/10.5281/zenodo.22943963)
 
 Python API for the **JazzSAMBA** multitrack jazz-standards dataset.
@@ -10,6 +11,7 @@ Install the package, point it at a local `JazzSAMBA/` directory (after unzipping
 
 | | |
 |--|--|
+| **Paper** | [arXiv:2609.34931](https://arxiv.org/abs/2609.34931) |
 | **Dataset download** | [Zenodo `10.5281/zenodo.22943963`](https://zenodo.org/records/22943963) |
 | **Project page** | [`pnlong/jazzsamba-demo`](https://github.com/pnlong/jazzsamba-demo) — [listen / explore](https://pnlong.github.io/jazzsamba-demo/) |
 | **Processing / release pipeline** | [`pnlong/jazz-standard-dataset`](https://github.com/pnlong/jazz-standard-dataset) (authoring only; not required to use this package) |
